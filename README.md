@@ -6,7 +6,13 @@
 
 SystemdShield automatiza el proceso de hardening de servicios systemd aplicando perfiles de seguridad predefinidos basados en las mejores prácticas de "Privilegio Mínimo" y "Defensa en Profundidad".
 
-Desarrollado tras analizar y endurecer manualmente más de 35 servicios en un sistema Ubuntu 24.04 LTS, esta herramienta encapsula todo ese conocimiento en perfiles reutilizables y seguros.
+## 🎯 Motivación
+
+Esta herramienta nace de la voluntad de llevar a la práctica los conocimientos adquiridos en los cursos de ciberseguridad de **Google** y **Cisco**. El objetivo es proporcionar una solución real a las inquietudes sobre el bastionado de sistemas que surgen durante estas formaciones, automatizando conceptos teóricos complejos en acciones de seguridad tangibles.
+
+## 🐧 Compatibilidad
+
+Aunque el desarrollo inicial se ha realizado sobre **Ubuntu 24.04 LTS**, SystemdShield es **multiplataforma** y compatible con cualquier distribución Linux que utilice **systemd** (Debian, Arch Linux, Fedora, RHEL, CentOS, openSUSE, etc.). Utiliza herramientas nativas (`systemd-analyze`) y el estándar de archivos *Drop-in* para garantizar la máxima portabilidad.
 
 ## Características
 
