@@ -1,0 +1,82 @@
+# Perfiles de Hardening para Servicios Systemd
+# Basado en el análisis manual documentado en task_servicios_systemd.md
+
+profiles:
+  # Perfil para servicios de red que requieren conectividad
+  network_service:
+    description: "Servicios que requieren acceso a red (ej: wpa_supplicant, wazuh-agent)"
+    overrides:
+      NoNewPrivileges: "yes"
+      PrivateTmp: "yes"
+      ProtectKernelModules: "yes"
+      ProtectKernelTunables: "yes"
+      ProtectControlGroups: "yes"
+      RestrictRealtime: "yes"
+      LockPersonality: "yes"
+    # No incluye IPAddressDeny porque necesitan red
+
+  # Perfil para servicios de sistema que NO necesitan red
+  system_service:
+    description: "Servicios de sistema sin requisitos de red (ej: cron, anacron)"
+    overrides:
+      NoNewPrivileges: "yes"
+      IPAddressDeny: "any"
+      PrivateTmp: "yes"
+      ProtectKernelModules: "yes"
+      ProtectKernelTunables: "yes"
+      ProtectControlGroups: "yes"
+      RestrictRealtime: "yes"
+      LockPersonality: "yes"
+
+  # Perfil conservador para servicios críticos del sistema
+  critical_service:
+    description: "Servicios críticos donde el hardening debe ser quirúrgico (ej: dbus, gdm)"
+    overrides:
+      IPAddressDeny: "any"
+      LockPersonality: "yes"
+      ProtectKernelTunables: "yes"
+      ProtectControlGroups: "yes"
+      RestrictRealtime: "yes"
+    # Omite NoNewPrivileges y PrivateTmp para evitar romper funcionalidad
+
+  # Perfil para monitorización y observabilidad
+  monitoring_service:
+    description: "Servicios de monitorización con acceso local (ej: glances)"
+    overrides:
+      NoNewPrivileges: "yes"
+      PrivateTmp: "yes"
+      ProtectHome: "yes"
+      ProtectSystem: "full"
+      ProtectKernelModules: "yes"
+      ProtectKernelTunables: "yes"
+      ProtectControlGroups: "yes"
+      RestrictRealtime: "yes"
+      LockPersonality: "yes"
+      IPAddressAllow: "127.0.0.1"
+      IPAddressDeny: "any"
+
+  # Perfil para contenedores y virtualización
+  virtualization_service:
+    description: "Servicios de virtualización (ej: docker, libvirtd, virtualbox)"
+    overrides:
+      NoNewPrivileges: "yes"
+      PrivateTmp: "yes"
+      ProtectKernelTunables: "yes"
+      RestrictRealtime: "yes"
+      LockPersonality: "yes"
+    # Deliberadamente NO incluye ProtectKernelModules ni ProtectControlGroups
+
+# Mapeo de servicios conocidos a perfiles
+service_mappings:
+  "docker.service": "virtualization_service"
+  "containerd.service": "virtualization_service"
+  "libvirtd.service": "virtualization_service"
+  "virtualbox.service": "virtualization_service"
+  "wpa_supplicant.service": "network_service"
+  "wazuh-agent.service": "network_service"
+  "fail2ban.service": "network_service"
+  "cron.service": "system_service"
+  "anacron.service": "system_service"
+  "dbus.service": "critical_service"
+  "gdm.service": "critical_service"
+  "glances.service": "monitoring_service"

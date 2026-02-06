@@ -1,0 +1,16 @@
+# Servicios que NUNCA deben ser endurecidos automáticamente
+# Estos servicios son críticos y requieren análisis manual
+
+excluded_services:
+  - "user@1000.service"  # Gestor de sesión de usuario - rompe escritorio
+  - "user@*.service"  # Cualquier instancia de sesión de usuario
+  - "emergency.service"  # Modo de recuperación
+  - "rescue.service"  # Modo de rescate (aunque se puede endurecer manualmente)
+  - "systemd-logind.service"  # Gestor de login
+  - "getty@.service"  # TTY consoles (instancias)
+
+# Razones de exclusión (documentación)
+exclusion_reasons:
+  "user@1000.service": "Gestor de sesión systemd del usuario. Aislar este servicio rompe el entorno de escritorio completo."
+  "emergency.service": "Servicio de emergencia del sistema. Debe mantener acceso completo para reparación."
+  "rescue.service": "Aunque se puede endurecer con mucho cuidado, se excluye por defecto para evitar bloqueos de recuperación."

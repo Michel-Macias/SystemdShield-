@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Config
+config/profiles.yaml.backup
+config/exclusions.yaml.backup
+
+# OS
+.DS_Store
+.idea/
+.vscode/
